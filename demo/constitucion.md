@@ -2,7 +2,7 @@
 
 Texto para pasar a `/speckit-constitution` en `speckit-jetbrains-plugin`.
 
-```
+```md
 Principles for speckit-jetbrains-plugin, an open source JetBrains IDE plugin
 that makes references between Spec Kit artifacts navigable.
 
