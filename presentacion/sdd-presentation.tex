@@ -1,0 +1,45 @@
+%! suppress = DiscouragedUseOfDef
+\documentclass{presentacion}
+
+\hypersetup{pdfpagemode=FullScreen}
+
+\usepackage[spanish]{babel}
+\usepackage{fontspec}
+
+\usepackage[backend=bibtex,style=alphabetic]{biblatex}
+%! suppress = MissingBibliographystyle
+\bibliography{referencias}
+
+\usepackage[most]{tcolorbox}
+
+\usepackage{graphicx}
+
+\usefonttheme{structurebold} % using non standard fonts for beamer
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% configuración de tema
+\usetheme[secheader]{Madrid}
+\usecolortheme{seahorse}
+
+\title{Lanzando un proyecto open source en vivo}
+\subtitle{con Spec-Driven Development}
+\author{Andrés Alcarraz}
+\institute{Peru JUG - JConf Perú 2026}
+\date{28 de noviembre de 2026}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\input{sections/01-about-me}
+\input{sections/02-peru-jugos}
+\input{sections/03-sdd}
+\input{sections/04-proyecto}
+\input{sections/05-demo}
+\input{sections/06-cierre}
+\input{sections/07-preguntas}
+\input{sections/08-referencias}
+
+\end{document}

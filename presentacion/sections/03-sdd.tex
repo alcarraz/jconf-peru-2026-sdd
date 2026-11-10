@@ -1,0 +1,66 @@
+\section{Spec-Driven Development}
+
+\begin{frame}
+    \frametitle{Vibe coding vs. Spec-Driven Development}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Vibe coding}
+                \begin{itemize}
+                    \item El prompt es efímero
+                    \item El código es la única fuente de verdad
+                    \item El contexto se pierde entre sesiones
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{exampleblock}{SDD}
+                \begin{itemize}
+                    \item La especificación es la fuente de verdad
+                    \item Requisitos, criterios de éxito, plan y tareas versionados
+                    \item Cada artefacto trazable al siguiente
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{El flujo de Spec Kit~\cite{SpecKit}}
+    \begin{center}
+        \begin{tikzpicture}[
+            phase/.style={rectangle, rounded corners=5pt, fill=blue!15, draw=blue!50,
+            font=\small\ttfamily, minimum height=1.2em, align=center},
+            artifact/.style={font=\scriptsize, align=center, text width=1.8cm},
+            node distance=0.7cm
+        ]
+            \node (const) [phase] {constitution};
+            \node (spec) [phase, right=of const] {specify};
+            \node (clar) [phase, right=of spec] {clarify};
+            \node (plan) [phase, right=of clar] {plan};
+            \node (tasks) [phase, right=of plan] {tasks};
+            \node (impl) [phase, right=of tasks] {implement};
+
+            \foreach \a/\b in {const/spec, spec/clar, clar/plan, plan/tasks, tasks/impl}
+                \draw [->, thick] (\a) -- (\b);
+
+            \node [artifact, below=0.3cm of const] {Principios del proyecto};
+            \node [artifact, below=0.3cm of spec] {\texttt{spec.md}\\FR-\#\#\#, SC-\#\#\#};
+            \node [artifact, below=0.3cm of clar] {Ambigüedades resueltas};
+            \node [artifact, below=0.3cm of plan] {\texttt{plan.md}\\\texttt{research.md}};
+            \node [artifact, below=0.3cm of tasks] {\texttt{tasks.md}\\T\#\#\# $\rightarrow$ FR};
+            \node [artifact, below=0.3cm of impl] {Código};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Panorama de implementaciones~\cite{Fowler2025SDD}}
+    \begin{itemize}
+        \item \textbf{Spec Kit}~\cite{SpecKit}: formal, con fases y trazabilidad explícitas; ideal para proyectos nuevos
+        \item \textbf{OpenSpec}~\cite{OpenSpec}: cambios incrementales sobre specs existentes; ideal para proyectos legacy
+        \item \textbf{Kiro}~\cite{Kiro}: IDE con requisitos, diseño y tareas integrados
+    \end{itemize}
+    \begin{alertblock}{Hoy}
+        Proyecto nuevo $\Rightarrow$ Spec Kit
+    \end{alertblock}
+\end{frame}
