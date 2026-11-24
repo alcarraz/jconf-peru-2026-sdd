@@ -27,9 +27,9 @@ Sin texto: responder en vivo las preguntas del agente.
 ## `/speckit-plan`
 
 ```md
-Usa el proyecto Gradle que ya existe en este repositorio, creado a partir del
-IntelliJ Platform Plugin Template: toolchain de Java 21, IntelliJ Platform
-2026.1 y sin Kotlin.
+El proyecto todavía no existe: el repositorio está vacío. Será un plugin de
+IntelliJ Platform en Java 21, para IntelliJ Platform 2026.1, construido con
+Gradle y sin Kotlin.
 ```
 
 ## `/speckit-tasks`
