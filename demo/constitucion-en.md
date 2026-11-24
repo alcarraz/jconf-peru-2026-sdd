@@ -1,8 +1,3 @@
-# Borrador de constitución
-
-Texto para pasar a `/speckit-constitution` en `speckit-jetbrains-plugin`.
-
-```md
 Principles for speckit-jetbrains-plugin, an open source JetBrains IDE plugin
 that makes references between Spec Kit artifacts navigable.
 
@@ -20,6 +15,5 @@ that makes references between Spec Kit artifacts navigable.
    projects with many features.
 7. Traceable: each change traces to a requirement or task in the feature's
    specification.
-8. Language: code, comments and commits are written in English. Specification
-   artifacts are written in the language chosen for each feature.
-```
+8. Language: code, comments, commits and specification artifacts are written
+   in English, whatever language the conversation is held in.
