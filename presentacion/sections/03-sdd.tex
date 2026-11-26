@@ -1,4 +1,4 @@
-\section{Spec-Driven Development}
+\section[SDD]{Spec-Driven Development}
 
 \begin{frame}
     \frametitle{Vibe coding vs. Spec-Driven Development}
@@ -27,28 +27,39 @@
 \begin{frame}
     \frametitle{El flujo de Spec Kit~\cite{SpecKit}}
     \begin{center}
-        \begin{tikzpicture}[
-            phase/.style={rectangle, rounded corners=5pt, fill=blue!15, draw=blue!50,
-            font=\small\ttfamily, minimum height=1.2em, align=center},
-            artifact/.style={font=\scriptsize, align=center, text width=1.8cm},
-            node distance=0.7cm
+        % Two rows in a zigzag: the second one reads right to left so plan flows straight down into tasks
+        \begin{tikzpicture}[x=3.3cm, y=1cm,
+            phase/.style={rectangle, rounded corners=5pt, fill=white, draw=pjred,
+            font=\small\ttfamily, minimum height=1.4em, minimum width=2.3cm, align=center},
+            artifact/.style={font=\scriptsize, align=center, text width=2.6cm},
+            flow/.style={->, thick}
         ]
-            \node (const) [phase] {constitution};
-            \node (spec) [phase, right=of const] {specify};
-            \node (clar) [phase, right=of spec] {clarify};
-            \node (plan) [phase, right=of clar] {plan};
-            \node (tasks) [phase, right=of plan] {tasks};
-            \node (impl) [phase, right=of tasks] {implement};
+            \node (const) [phase] at (0,0) {constitution};
+            \node (spec) [phase] at (1,0) {specify};
+            \node (clar) [phase] at (2,0) {clarify};
+            \node (plan) [phase] at (3,0) {plan};
+            \node (tasks) [phase] at (3,-2.9) {tasks};
+            \node (anal) [phase] at (2,-2.9) {analyze};
+            \node (impl) [phase] at (1,-2.9) {implement};
+            \node (conv) [phase] at (0,-2.9) {converge};
 
-            \foreach \a/\b in {const/spec, spec/clar, clar/plan, plan/tasks, tasks/impl}
-                \draw [->, thick] (\a) -- (\b);
+            \foreach \a/\b in {const/spec, spec/clar, clar/plan, tasks/anal, anal/impl, impl/conv}
+                \draw [flow] (\a) -- (\b);
+            \draw [flow] (plan) -- (tasks);
+            \draw [flow, pjred] (conv.north) to[bend left=30]
+                node [midway, above, font=\scriptsize, text=pjred] {tareas nuevas}
+                (impl.north);
 
-            \node [artifact, below=0.3cm of const] {Principios del proyecto};
-            \node [artifact, below=0.3cm of spec] {\texttt{spec.md}\\FR-\#\#\#, SC-\#\#\#};
-            \node [artifact, below=0.3cm of clar] {Ambigüedades resueltas};
-            \node [artifact, below=0.3cm of plan] {\texttt{plan.md}\\\texttt{research.md}};
-            \node [artifact, below=0.3cm of tasks] {\texttt{tasks.md}\\T\#\#\# $\rightarrow$ FR};
-            \node [artifact, below=0.3cm of impl] {Código};
+            \node [artifact, below=0.2cm of const] {Principios del proyecto};
+            \node [artifact, below=0.2cm of spec] {\texttt{spec.md}\\FR-\#\#\#, SC-\#\#\#};
+            \node [artifact, below=0.2cm of clar] {Ambigüedades resueltas};
+            % Beside the plan -> tasks arrow rather than under it
+            \node [artifact, anchor=north west, align=left, text width=2cm]
+                at ([xshift=0.15cm, yshift=-0.2cm]plan.south) {\texttt{plan.md}\\\texttt{research.md}};
+            \node [artifact, below=0.2cm of tasks] {\texttt{tasks.md}\\T\#\#\# $\rightarrow$ FR};
+            \node [artifact, below=0.2cm of anal] {Consistencia entre spec, plan y tareas};
+            \node [artifact, below=0.2cm of impl] {Código};
+            \node [artifact, below=0.2cm of conv] {Código vs. spec:\\¿falta algo?\\No $\Rightarrow$ \textbf{convergió}};
         \end{tikzpicture}
     \end{center}
 \end{frame}
