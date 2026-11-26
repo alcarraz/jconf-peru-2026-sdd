@@ -127,12 +127,20 @@
 \setmonofont{Noto Sans Mono}[Scale=MatchLowercase]
 
 \setbeamertemplate{navigation symbols}{}
-\setbeamersize{text margin left=1.1cm, text margin right=1.1cm}
+% Page margin shared by the logo, QR, title bar, panel and footer, in cm; text sits 0.4cm further in
+\newcommand{\pjm}{0.4}
+\newlength{\pjtextmargin}
+\setlength{\pjtextmargin}{\dimexpr\pjm cm + 0.4cm\relax}
+\setbeamersize{text margin left=\pjtextmargin, text margin right=\pjtextmargin}
 
 \setbeamercolor{normal text}{fg=pjdark}
 \setbeamercolor{structure}{fg=pjred}
 \setbeamercolor{alerted text}{fg=pjred}
 \setbeamercolor{example text}{fg=pjred}
+\setbeamercolor{bibliography entry author}{fg=pjdark}
+\setbeamercolor{bibliography entry title}{fg=pjdark}
+\setbeamercolor{bibliography entry location}{fg=pjdark!65}
+\setbeamercolor{bibliography entry note}{fg=pjdark!65}
 \setbeamerfont{frametitle}{series=\bfseries}
 
 \setbeamertemplate{frametitle continuation}{}
@@ -143,21 +151,27 @@
 \setbeamertemplate{section in head/foot}{\textcolor{pjred}{\bfseries\insertsectionhead}}
 \setbeamertemplate{section in head/foot shaded}{\textcolor{pjdark!65}{\insertsectionhead}}
 
+% QR to the talk repository, top right; red modules on a transparent background, sized so
+% its bottom lines up with the title bar's (2.3cm from the top of the page)
+\newcommand{\pjqrimage}{\includegraphics[width=\dimexpr 2.3cm - \pjm cm\relax]{img/qr-code.png}}
+
 % Footer shared by every page: progress rule, community link, section navigation
 % and a progress dial around the two-digit page number.
 % The total frame count comes from the previous run, so it is clamped on the first one.
 \newcommand{\pjfooter}{%
     \pgfmathsetmacro\pjprogress{min(1, \insertframenumber/max(1, \inserttotalframenumber))}%
-    \fill[pjdark!20] (0.9,-8.1) rectangle ++(14.2,-0.05);
-    \fill[pjred] (0.9,-8.1) rectangle ++(14.2*\pjprogress,-0.05);
-    \node[anchor=west, inner sep=0, font=\fontsize{6.5}{8}\selectfont] at (0.9,-8.6)
-        {Peru JUG \textperiodcentered\ linktr.ee/perujug};
-    \node[anchor=west, inner sep=0, font=\fontsize{6.5}{8}\selectfont] at (3.9,-8.6)
-        {\insertsectionnavigationhorizontal{10cm}{}{\hfill}};
-    \draw[pjdark!20, line width=1.4pt] (14.8,-8.6) circle[radius=0.27];
-    \draw[pjred, line width=1.4pt] (14.8,-8.33)
+    % Footer items are centred on the dial, which sits \pjm from the bottom right corner
+    \pgfmathsetmacro\pjfy{-9 + \pjm + 0.27}%
+    \fill[pjdark!20] ({\pjm},{\pjfy + 0.5}) rectangle ++({16 - 2*\pjm},-0.05);
+    \fill[pjred] ({\pjm},{\pjfy + 0.5}) rectangle ++({(16 - 2*\pjm)*\pjprogress},-0.05);
+    \node[anchor=west, inner sep=0, font=\fontsize{6.5}{8}\selectfont] at ({\pjm},\pjfy)
+        {Peru JUG \textperiodcentered\ \href{https://linktr.ee/perujug}{linktr.ee/perujug}};
+    \node[anchor=west, inner sep=0, font=\fontsize{6.5}{8}\selectfont] at ({\pjm + 3.15},\pjfy)
+        {\insertsectionnavigationhorizontal{10.5cm}{}{\hfill}};
+    \draw[pjdark!20, line width=1.4pt] ({16 - \pjm - 0.27},\pjfy) circle[radius=0.27];
+    \draw[pjred, line width=1.4pt] ({16 - \pjm - 0.27},{\pjfy + 0.27})
         arc[start angle=90, end angle=90-359.9*\pjprogress, radius=0.27];
-    \node[inner sep=0, font=\bfseries\fontsize{6.5}{8}\selectfont] at (14.8,-8.6)
+    \node[inner sep=0, font=\bfseries\fontsize{6.5}{8}\selectfont] at ({16 - \pjm - 0.27},\pjfy)
         {\ifnum\insertframenumber<10 0\fi\insertframenumber};
 }
 
@@ -166,31 +180,51 @@
         \useasboundingbox (0,0) rectangle (16,-9);
         \node[anchor=north west, inner sep=0] at (0,0)
             {\includegraphics[width=16cm, height=9cm]{img/fondo.jpg}};
-        \node[anchor=north west, inner sep=0] at (0.75,-0.23)
+        % Offset by the image's own transparent padding so the visible logo sits \pjm
+        % from the top and left edges, like the QR on the other side
+        \node[anchor=north west, inner sep=0] at ({\pjm - 0.07},{-\pjm + 0.05})
             {\includegraphics[width=3.85cm]{img/logo.png}};
         \pjfooter
     \end{tikzpicture}%
 }
 
 \setbeamertemplate{headline}{\vbox to 1.3cm{}}
-\setbeamertemplate{footline}{\vbox to 0.95cm{}}
+% The footline is typeset after the frame content, so the QR drawn here stays on top of
+% the title bar and the panel
+\setbeamertemplate{footline}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=north east, inner sep=0, opacity=0.5]
+            at ([xshift=-\pjm cm, yshift=-\pjm cm]current page.north east) {\pjqrimage};
+    \end{tikzpicture}%
+    \vbox to 1.05cm{}%
+}
 
 % Section-style frames (\seccion) show only the title bar; content frames also get
 % a translucent panel so text stays legible over the background.
+% Title bar fades from black into the page background, staying opaque under the title
+% text and clearing only towards the QR on the right (white = opaque, black = transparent)
+\usetikzlibrary{fadings}
+\pgfdeclarehorizontalshading{pjtitlemask}{100bp}{color(0bp)=(white); color(65bp)=(white!80!black); color(100bp)=(black)}
+\pgfdeclarefading{pjtitle}{\pgfuseshading{pjtitlemask}}
+
 \newif\ifpjpanel
 \pjpaneltrue
 % The frametitle box starts at the left text margin; shift back by it so coordinates are page-relative
 \setbeamertemplate{frametitle}{%
-    \hskip-1.1cm\rlap{%
+    \hskip-\pjtextmargin\rlap{%
     \begin{tikzpicture}[x=1cm, y=1cm]
         \useasboundingbox (0,0) rectangle (16,-1.35);
+        % y is relative to the top of the frametitle, 1.3cm below the page top; the panel
+        % stops 0.13cm above the footer's progress rule
         \ifpjpanel
-            \fill[white, opacity=0.88] (0.75,-1.2) rectangle (15.25,-6.75);
+            \fill[white, opacity=0.88] ({\pjm},-1.2) rectangle ({16 - \pjm},{-9 + \pjm + 0.27 + 0.63 + 1.3});
         \fi
-        \fill[pjred] (0.75,-1.2) rectangle (15.25,-1.25);
-        \fill[pjdark] (0.75,0) rectangle (15.25,-1.0);
-        \node[anchor=west, text=white, text width=13.9cm, inner sep=0,
-            font=\usebeamerfont{frametitle}\fontsize{15}{18}\selectfont] at (1.05,-0.5)
+        \fill[pjred] ({\pjm},-1.2) rectangle ({16 - \pjm},-1.25);
+        % Ends 0.1cm before the QR, whose left edge is always at 13.7cm: it is
+        % (2.3 - \pjm) wide and \pjm from the right edge
+        \fill[pjdark, path fading=pjtitle, fit fading=true] ({\pjm},0) rectangle (13.6,-1.0);
+        \node[anchor=west, text=white, text width={13.4cm - \pjm cm - 0.3cm}, inner sep=0,
+            font=\usebeamerfont{frametitle}\fontsize{15}{18}\selectfont] at ({\pjm + 0.3},-0.5)
             {\insertframetitle};
     \end{tikzpicture}}%
 }

@@ -16,7 +16,7 @@
             \begin{exampleblock}{SDD}
                 \begin{itemize}
                     \item La especificación es la fuente de verdad
-                    \item Requisitos, criterios de éxito, plan y tareas versionados
+                    \item Requisitos, plan y tareas versionados
                     \item Cada artefacto trazable al siguiente
                 \end{itemize}
             \end{exampleblock}
@@ -27,40 +27,8 @@
 \begin{frame}
     \frametitle{El flujo de Spec Kit~\cite{SpecKit}}
     \begin{center}
-        % Two rows in a zigzag: the second one reads right to left so plan flows straight down into tasks
-        \begin{tikzpicture}[x=3.3cm, y=1cm,
-            phase/.style={rectangle, rounded corners=5pt, fill=white, draw=pjred,
-            font=\small\ttfamily, minimum height=1.4em, minimum width=2.3cm, align=center},
-            artifact/.style={font=\scriptsize, align=center, text width=2.6cm},
-            flow/.style={->, thick}
-        ]
-            \node (const) [phase] at (0,0) {constitution};
-            \node (spec) [phase] at (1,0) {specify};
-            \node (clar) [phase] at (2,0) {clarify};
-            \node (plan) [phase] at (3,0) {plan};
-            \node (tasks) [phase] at (3,-2.9) {tasks};
-            \node (anal) [phase] at (2,-2.9) {analyze};
-            \node (impl) [phase] at (1,-2.9) {implement};
-            \node (conv) [phase] at (0,-2.9) {converge};
-
-            \foreach \a/\b in {const/spec, spec/clar, clar/plan, tasks/anal, anal/impl, impl/conv}
-                \draw [flow] (\a) -- (\b);
-            \draw [flow] (plan) -- (tasks);
-            \draw [flow, pjred] (conv.north) to[bend left=30]
-                node [midway, above, font=\scriptsize, text=pjred] {tareas nuevas}
-                (impl.north);
-
-            \node [artifact, below=0.2cm of const] {Principios del proyecto};
-            \node [artifact, below=0.2cm of spec] {\texttt{spec.md}\\FR-\#\#\#, SC-\#\#\#};
-            \node [artifact, below=0.2cm of clar] {Ambigüedades resueltas};
-            % Beside the plan -> tasks arrow rather than under it
-            \node [artifact, anchor=north west, align=left, text width=2cm]
-                at ([xshift=0.15cm, yshift=-0.2cm]plan.south) {\texttt{plan.md}\\\texttt{research.md}};
-            \node [artifact, below=0.2cm of tasks] {\texttt{tasks.md}\\T\#\#\# $\rightarrow$ FR};
-            \node [artifact, below=0.2cm of anal] {Consistencia entre spec, plan y tareas};
-            \node [artifact, below=0.2cm of impl] {Código};
-            \node [artifact, below=0.2cm of conv] {Código vs. spec:\\¿falta algo?\\No $\Rightarrow$ \textbf{convergió}};
-        \end{tikzpicture}
+        % Generated from img/flujo.mmd by the Makefile
+        \includegraphics[width=\linewidth,height=4.7cm,keepaspectratio]{img/flujo.pdf}
     \end{center}
 \end{frame}
 
