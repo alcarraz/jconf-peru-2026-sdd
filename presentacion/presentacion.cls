@@ -306,3 +306,22 @@
     }%
     \begin{frame}[plain]\end{frame}%
 }}
+
+% Transitions: a short fade between slides and a push on the first slide of each section. Steps
+% of the same frame (\pause) get none, so revealed content appears in place. The frame number
+% tells steps apart because the slide-in-frame counter has already advanced at shipout.
+\makeatletter
+\def\pjlastsection{0}
+\def\pjlastframe{0}
+\addtobeamertemplate{background canvas}{%
+    \ifnum\insertframenumber=\pjlastframe\relax
+        \transreplace
+    \else\ifnum\insertsectionnumber=\pjlastsection\relax
+        \transfade[duration=0.3]%
+    \else
+        \transpush[duration=0.5, direction=180]%
+        \xdef\pjlastsection{\insertsectionnumber}%
+    \fi\fi
+    \xdef\pjlastframe{\insertframenumber}%
+}{}
+\makeatother
