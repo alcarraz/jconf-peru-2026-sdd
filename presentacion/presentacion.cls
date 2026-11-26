@@ -229,6 +229,34 @@
     \end{tikzpicture}}%
 }
 
+% Full-screen frame: background image and a translucent panel only, without logo, QR,
+% title bar or footer. Usage: {\pantallacompleta\begin{frame}[plain] ... \end{frame}}
+\newcommand{\pantallacompleta}{%
+    \setbeamertemplate{background}{%
+        \begin{tikzpicture}[x=1cm, y=1cm]
+            \useasboundingbox (0,0) rectangle (16,-9);
+            \node[anchor=north west, inner sep=0] at (0,0)
+                {\includegraphics[width=16cm, height=9cm]{img/fondo.jpg}};
+            \fill[white, opacity=0.88] ({\pjm},{-\pjm}) rectangle ({16 - \pjm},{-9 + \pjm});
+        \end{tikzpicture}%
+    }%
+}
+
+% Flow diagram phases are styled by what they modify: the default red border writes Spec Kit
+% artifacts, pjcodigo writes code and pjlectura changes nothing; pjmuestra draws legend swatches
+\tikzset{
+    pjcodigo/.style={fill=pjred, text=white},
+    pjlectura/.style={dashed, draw=pjdark!55, fill=pjdark!6},
+    pjmuestra/.style={rectangle, rounded corners=1.5pt, draw=pjred, fill=white,
+        minimum width=0.55cm, minimum height=0.32cm, inner sep=0},
+    pjleyenda/.style={font=\scriptsize, anchor=west, inner sep=2pt},
+}
+
+% Flow diagram phase: command name, then its artifact in small type
+% The caption goes in a tabular so its own line breaks keep the small font (TikZ resets
+% the font at each node line)
+\newcommand{\pjfase}[2]{\texttt{\bfseries #1}\\[-1pt]{\scriptsize\begin{tabular}{@{}c@{}}#2\end{tabular}}}
+
 % Section divider: title bar plus a short phrase introducing the topic
 % Usage: \seccion{<title>}{<phrase>}
 \newcommand{\seccion}[2]{{%
