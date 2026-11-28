@@ -190,12 +190,16 @@
 
 \setbeamertemplate{headline}{\vbox to 1.3cm{}}
 % The footline is typeset after the frame content, so the QR drawn here stays on top of
-% the title bar and the panel
+% the title bar and the panel. A frame that shows another QR turns it off with \pjqrfalse.
+\newif\ifpjqr
+\pjqrtrue
 \setbeamertemplate{footline}{%
+    \ifpjqr
     \begin{tikzpicture}[remember picture, overlay]
         \node[anchor=north east, inner sep=0, opacity=0.5]
             at ([xshift=-\pjm cm, yshift=-\pjm cm]current page.north east) {\pjqrimage};
     \end{tikzpicture}%
+    \fi
     \vbox to 1.05cm{}%
 }
 
@@ -243,13 +247,19 @@
 }
 
 % Flow diagram phases are styled by what they modify: the default red border writes Spec Kit
-% artifacts, pjcodigo writes code and pjlectura changes nothing; pjmuestra draws legend swatches
+% artifacts, pjcodigo writes code and pjlectura changes nothing; pjopcional marks phases that
+% can be skipped, and pjmuestra draws legend swatches. Fill tells what a phase modifies and the
+% border style whether it is optional, so the read-only swatch has no border.
 \tikzset{
     pjcodigo/.style={fill=pjred, text=white},
-    pjlectura/.style={dashed, draw=pjdark!55, fill=pjdark!6},
+    pjlectura/.style={fill=pjdark!25},
+    pjopcional/.style={dashed},
     pjmuestra/.style={rectangle, rounded corners=1.5pt, draw=pjred, fill=white,
-        minimum width=0.55cm, minimum height=0.32cm, inner sep=0},
-    pjleyenda/.style={font=\scriptsize, anchor=west, inner sep=2pt},
+        minimum width=0.45cm, minimum height=0.26cm, inner sep=0},
+    pjleyenda/.style={font=\tiny, anchor=west, inner sep=2pt},
+    % constitution runs once per project, not per feature: a dashed arrow and a note say so
+    pjconstitucion/.style={-latex, thick, dashed, pjdark!60},
+    pjnota/.style={font=\scriptsize\itshape, text=pjdark!65, align=center, inner sep=1pt},
 }
 
 % Flow diagram phase: command name, then its artifact in small type
@@ -301,7 +311,6 @@
                  \smallskip{\small\insertinstitute\par}};
             \node[anchor=north west, inner sep=0] at (12.625,-6.0)
                 {\includegraphics[width=2cm]{img/mascota.png}};
-            \pjfooter
         \end{tikzpicture}%
     }%
     \begin{frame}[plain]\end{frame}%

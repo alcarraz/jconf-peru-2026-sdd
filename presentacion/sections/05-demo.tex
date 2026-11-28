@@ -1,2 +1,99 @@
 \section{Demo}
-\seccion{Demo}{\texttt{specify init}}
+\begin{frame}
+    \frametitle{El flujo simplificado de Spec Kit~\cite{SpecKit}}
+    \centering
+    % The short path from the quickstart; the next slide shows every phase
+    \begin{tikzpicture}[node distance=0.33cm, every join/.style={-latex, thick, pjdark},
+        phase/.style={rectangle, rounded corners=3pt, draw=pjred, fill=white, align=center,
+            font=\footnotesize, minimum height=1.15cm, minimum width=1.9cm, inner sep=2pt},
+        lbl/.style={font=\scriptsize, text=pjred, fill=white, inner sep=1pt, align=center}]
+        \begin{scope}[start chain=going right]
+            \node [phase, on chain] (const) {\pjfase{constitution}{Principios}};
+            \node [phase, on chain] (spec) {\pjfase{specify}{spec.md}};
+            \node [phase, on chain, join] {\pjfase{plan}{plan.md\\research.md\\data-model.md\\contracts/}};
+            \node [phase, on chain, join] {\pjfase{tasks}{tasks.md}};
+            \node [phase, pjcodigo, on chain, join] (impl) {\pjfase{implement}{Código}};
+            \node [phase, on chain, join] (conv) {\pjfase{converge}{Código vs. spec}};
+        \end{scope}
+        \draw [-latex, thick, pjred] (conv.south) to [bend left=35]
+            node [lbl, below] {tareas nuevas, hasta\\que reporte \textbf{Converged}} (impl.south);
+        \draw [pjconstitucion] (const) -- (spec);
+        \node [pjnota, below=0.1cm of const] {solo al inicio o\\al cambiar principios};
+        \node [pjmuestra, below=1.3cm of const.south west, anchor=west] (m1) {};
+        \node [pjleyenda] at (m1.east) {escribe artefactos};
+        \node [pjmuestra, pjcodigo, right=2.1cm of m1] (m2) {};
+        \node [pjleyenda] at (m2.east) {escribe código};
+    \end{tikzpicture}
+\end{frame}
+
+{\pantallacompleta
+\begin{frame}[plain]
+    % Full screen so the three stages fit at a readable size; each stage is a chain, and
+    % only the loops and the arrows between stages are drawn by hand
+    \makebox[\textwidth]{%
+    \begin{tikzpicture}[node distance=0.5cm, every join/.style=flow,
+        phase/.style={rectangle, rounded corners=3pt, draw=pjred, fill=white, align=center,
+            font=\footnotesize, minimum height=0.85cm, minimum width=2.35cm, inner sep=2pt},
+        decision/.style={diamond, aspect=1.7, draw=pjred, fill=white, align=center,
+            font=\scriptsize, inner sep=0.5pt},
+        terminal/.style={rounded rectangle, draw=pjred, fill=white, font=\footnotesize\bfseries,
+            minimum height=0.7cm, inner xsep=8pt},
+        flow/.style={-latex, thick, pjdark},
+        loop/.style={flow, pjred},
+        lbl/.style={font=\scriptsize, text=pjred, fill=white, inner sep=1pt},
+        stage/.style={rectangle, fill=pjdark!5, draw=pjdark!20, rounded corners=2pt,
+            inner xsep=0.15cm, inner ysep=0.15cm},
+        stagetitle/.style={font=\tiny\bfseries, text=pjdark!70, rotate=90, anchor=south,
+            inner sep=0}]
+
+        \begin{scope}[start chain=r1 going right]
+            \node [phase, on chain] (const) {\pjfase{constitution}{Principios}};
+            \node [phase, on chain] (spec) {\pjfase{specify}{spec.md}};
+            \node [phase, pjopcional, on chain, join] (clar) {\pjfase{clarify}{Ambigüedades}};
+            \node [decision, on chain, join] (dudas) {¿quedan\\dudas?};
+        \end{scope}
+        \begin{scope}[start chain=r2 going right]
+            \node [phase, on chain, below=1.45cm of const.south west, anchor=north west] (plan) {\pjfase{plan}{plan.md\ldots}};
+            \node [phase, pjopcional, on chain, join] (check) {\pjfase{checklist}{Calidad de requisitos}};
+            \node [phase, on chain, join] (tasks) {\pjfase{tasks}{tasks.md}};
+            \node [phase, pjlectura, pjopcional, on chain, join] (anal) {\pjfase{analyze}{Consistencia}};
+            \node [decision, on chain, join] (hall) {¿hallaz-\\gos?};
+        \end{scope}
+        \begin{scope}[start chain=r3 going right]
+            \node [phase, pjcodigo, on chain, below=1.2cm of plan.south west, anchor=north west] (impl) {\pjfase{implement}{Código}};
+            \node [phase, on chain, join] (conv) {\pjfase{converge}{Código vs. spec}};
+            \node [decision, on chain, join] (falta) {¿falta\\algo?};
+            \node [terminal, on chain] (pr) {PR};
+        \end{scope}
+
+        \draw [flow] (falta) -- node [lbl, above] {no} (pr);
+        \draw [pjconstitucion] (const) -- (spec);
+        \node [pjmuestra, right=0.9cm of pr.north east, anchor=west] (m1) {};
+        \node [pjleyenda] at (m1.east) {escribe artefactos};
+        \node [pjmuestra, pjcodigo, right=2.1cm of m1] (m2) {};
+        \node [pjleyenda] at (m2.east) {escribe código};
+        \node [pjmuestra, pjlectura, draw=none, below=0.2cm of m1] (m3) {};
+        \node [pjleyenda] at (m3.east) {solo lectura};
+        \node [pjmuestra, pjopcional, below=0.2cm of m2] (m4) {};
+        \node [pjleyenda] at (m4.east) {opcional};
+        \draw [loop] (dudas.north) to [bend right=22] node [lbl, above] (l1) {sí} (clar.north);
+        \draw [loop] (hall.north) to [bend right=22] node [lbl, above] (l2) {sí: corregir artefactos} (anal.north);
+        \draw [flow] (dudas.south) -- ([yshift=0.3cm]dudas.south |- plan.north) node [lbl, right, pos=0.3] {no} -| (plan.north);
+        \draw [flow] (hall.south) -- ++(0,-0.4) node [lbl, right, pos=0.5] {no} -| (impl.north);
+        \draw [loop] (falta.south) to [bend left=15] node [lbl, below] (l3) {sí: tareas nuevas} (impl.south);
+        % analyze can also review the new tasks before implementing them
+        \draw [loop, dashed] (falta.north) -- ++(0,0.6) -| node [lbl, pos=0.25, above] {sí: volver a analizar} (anal.south);
+
+        \node [stagetitle] (t0) at ([xshift=-0.15cm]const.west) {Especificación};
+        \node [stagetitle] (t1) at ([xshift=-0.15cm]plan.west) {Planificación};
+        \node [stagetitle] (t2) at ([xshift=-0.15cm]impl.west) {Implementación};
+        \begin{scope}[on background layer]
+            \node [stage, fit={(t0)(dudas)(l1)}] (box0) {};
+            \node [stage, fit={(t1)(hall)(l2)}] (box1) {};
+            \node [stage, fit={(t2)(pr)(l3)}] (box2) {};
+        \end{scope}
+        \node [anchor=south west, font=\bfseries\large, inner sep=0] (title) at ([yshift=0.2cm]box0.north west)
+            {Flujo extendido~\cite{SpecKit}};
+    \end{tikzpicture}}
+\end{frame}
+}
